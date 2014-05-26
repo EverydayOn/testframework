@@ -43,22 +43,36 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	<developers>
+		<developer>
+			<id>jagadeshbmunta</id>
+			<name>Jagadesh Babu Munta</name>
+			<email>jagadesh.b.munta@gmail.com</email>
+			<url>http://www.everydayon.com</url>
+			<organization>EverydayOn Inc.</organization>
+			<organizationUrl>http://www.everydayon.com</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-8</timezone>
+		</developer>
+	</developers>
 	<ciManagement>
 		<system>jenkins</system>
-		<url>http://ci.jd.org:8080/</url>
+		<url>http://ci.everyday.com/</url>
 	</ciManagement>
-   <scm>
-       <connection>scm:git:https://www.github.com/jagadeshbmunta/testframework</connection>
-       <developerConnection>scm:git:https://www.github.com/jagadeshbmunta/testframework</developerConnection>
-       <tag>dev</tag>
-       <url>scm:git:https://www.github.com/jagadeshbmunta/testframework</url>
-   </scm>
-   <mailingLists>
-       <mailingList>
-           <name>jagadesh.b.munta@gmail.com</name>
-       </mailingList>
-   </mailingLists>
+	<scm>
+		<connection>scm:git:https://www.github.com/EverydayOn/testframework</connection>
+		<developerConnection>scm:git:https://www.github.com/EverydayOn/testframework</developerConnection>
+		<tag>dev</tag>
+		<url>scm:git:https://www.github.com/EverydayOn/testframework</url>
+	</scm>
+	<mailingLists>
+		<mailingList>
+			<name>jagadesh.b.munta@gmail.com</name>
+		</mailingList>
+	</mailingLists>
 	<repositories>
 		<repository>
 			<id>jenkins-releases</id>
@@ -106,4 +120,9 @@
 		</dependency>
 	</dependencies>
 
+	<description>Generic Rest API related tests</description>
+	<organization>
+		<url>http://www.everydayon.com</url>
+		<name>EverydayOn Inc.</name>
+	</organization>
 </project>
