@@ -1,4 +1,4 @@
-package com.apprity.qa.api.test;
+package com.everydayon.testframework.restapitest;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -15,6 +15,12 @@ import static com.jayway.restassured.RestAssured.*;
 import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
 import static org.hamcrest.Matchers.*;
 
+/**
+ * A simple test using RestAssured test framework
+ * 
+ * @author Jagadesh Babu Munta
+ *
+ */
 public class RestAssuredTest {
 	Logger logger = Logger.getLogger(RestAssuredTest.class);
 	@BeforeClass
@@ -48,7 +54,7 @@ public class RestAssuredTest {
 			log().everything().
 			headers("Accept", "application/vnd.github.v3+json").
 			expect().statusCode(200).log().all().
-			get("/users/jagadeshmunta/orgs");
+			get("/users/jagadeshbmunta/orgs");
 		
 	}
 	
