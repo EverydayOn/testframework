@@ -1,5 +1,6 @@
 package com.everydayon.testframework.restapitest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -16,13 +17,13 @@ import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
 import static org.hamcrest.Matchers.*;
 
 /**
- * A simple test using RestAssured test framework
+ * A simple github test using RestAssured test framework
  * 
  * @author Jagadesh Babu Munta
  *
  */
-public class RestAssuredTest {
-	Logger logger = Logger.getLogger(RestAssuredTest.class);
+public class GitHubRATest {
+	Logger logger = Logger.getLogger(GitHubRATest.class);
 	@BeforeClass
 	public void setup() {
 		RestAssured.baseURI = System.getProperty("api.host","https://api.github.com");
@@ -31,7 +32,7 @@ public class RestAssuredTest {
 	}
 	
 	@Test(dataProvider="testData")
-	public void basicLoginTest(String userName, String password) {	
+	public void basicLoginTest1(String userName, String password, int expStatusCode) {	
 		//System.out.println(userName);
 		given().
 			log().everything().
@@ -39,21 +40,25 @@ public class RestAssuredTest {
 			auth().
 			preemptive().
 			basic(userName, password).
-		expect().statusCode(200).log().all().
-		get("/");
+		expect().statusCode(expStatusCode).log().all().
+		get("/");		
 		
+	}
+
+	@Test(dataProvider="testData")
+	public void basicLoginTest2(String userName, String password, int expStatusCode) {	
 		RestAssured.authentication = preemptive().basic(userName, password);
 		
 		given().
-		log().all().
-		headers("Accept", "application/vnd.github.v3+json").
-		expect().statusCode(200).log().all().
+			log().all().
+			headers("Accept", "application/vnd.github.v3+json").
+		expect().statusCode(expStatusCode).log().all().
 		get("/authorizations");		
 		
 		given().
 			log().everything().
 			headers("Accept", "application/vnd.github.v3+json").
-			expect().statusCode(200).log().all().
+			expect().statusCode(expStatusCode).log().all().
 			get("/users/jagadeshbmunta/orgs");
 		
 	}
@@ -67,8 +72,8 @@ public class RestAssuredTest {
 	@DataProvider
 	public Object[][] testData() {
 		return new Object[][] {
-				{"jagadeshbmunta","test123!"},
-				{"test","test123"}
+				{"jagadeshbmunta",new String(Base64.decodeBase64("dGVzdDEyMyE=")), 200},
+				{"test","test123",401}
 		};
 	}
 	
