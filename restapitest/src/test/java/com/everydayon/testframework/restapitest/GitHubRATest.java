@@ -11,6 +11,9 @@ import sun.util.logging.resources.logging;
 import static org.testng.Assert.*;
 
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.path.json.JsonPath;
+import com.jayway.restassured.response.Response;
+import com.jayway.restassured.response.ResponseBody;
 
 import static com.jayway.restassured.RestAssured.*;
 import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
@@ -32,22 +35,23 @@ public class GitHubRATest {
 	}
 	
 	@Test(dataProvider="testData")
-	public void basicLoginTest1(String userName, String password, int expStatusCode) {	
+	public void basicLoginTest1(String userName, String password, int expStatusCode, String expData) {
+		
 		//System.out.println(userName);
 		given().
 			log().everything().
 			headers("Accept", "application/vnd.github.v3+json").
 			auth().
 			preemptive().
-			basic(userName, password).
+			basic(userName, new String(Base64.decodeBase64(password))).
 		expect().statusCode(expStatusCode).log().all().
 		get("/");		
 		
 	}
 
 	@Test(dataProvider="testData")
-	public void basicLoginTest2(String userName, String password, int expStatusCode) {	
-		RestAssured.authentication = preemptive().basic(userName, password);
+	public void basicLoginTest2(String userName, String password, int expStatusCode,String expData) {	
+		RestAssured.authentication = preemptive().basic(userName, new String(Base64.decodeBase64(password)));
 		
 		given().
 			log().all().
@@ -55,12 +59,24 @@ public class GitHubRATest {
 		expect().statusCode(expStatusCode).log().all().
 		get("/authorizations");		
 		
-		given().
+		ResponseBody resBody = given().
 			log().everything().
 			headers("Accept", "application/vnd.github.v3+json").
+		expect().statusCode(expStatusCode).log().all().
+		get("/users/jagadeshbmunta/orgs").body();
+		
+		//assertEquals(resBody.path("url"),expData);
+		Response res = given().
+				log().everything().
+				headers("Accept", "application/vnd.github.v3+json").
 			expect().statusCode(expStatusCode).log().all().
 			get("/users/jagadeshbmunta/orgs");
 		
+		String json = res.asString();
+		System.out.println(">>>>>>>>>>>>>Json="+json);
+		JsonPath j = new JsonPath(json);
+		System.out.println(">>>>>>>>>>>>>[0].url="+j.get("[0].url"));
+		assertEquals(j.get("[0].url"),expData);
 	}
 	
 	@AfterClass
@@ -72,8 +88,8 @@ public class GitHubRATest {
 	@DataProvider
 	public Object[][] testData() {
 		return new Object[][] {
-				{"jagadeshbmunta",new String(Base64.decodeBase64("dGVzdDEyMyE=")), 200},
-				{"test","test123",401}
+				{"jagadeshbmunta","dGVzdDEyMyE=", 200,"https://api.github.com/orgs/EverydayOn"},
+				{"test","dGVzdDEyMy=",401,null}
 		};
 	}
 	
