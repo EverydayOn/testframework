@@ -78,6 +78,28 @@ public class GitHubRATest {
 		System.out.println(">>>>>>>>>>>>>[0].url="+j.get("[0].url"));
 		assertEquals(j.get("[0].url"),expData);
 	}
+
+	/**
+	 * Ref : https://developer.github.com/v3/oauth/
+	 * GET https://github.com/login/oauth/authorize?client_id=
+	 * POST https://github.com/login/oauth/access_token
+	 * 	client_id=
+	 * 	client_secret=
+	 * 	code=
+	 * GET https://api.github.com/user?access_token=
+	 * 
+	 * @param accessToken
+	 * @param expectedStatusCode
+	 */
+	@Test(dataProvider="testData2")
+	public void tokenTest(String accessToken, int expectedStatusCode) {
+		RestAssured.reset();
+		RestAssured.baseURI = System.getProperty("api.host","https://api.github.com");
+		given().log().everything().headers("Authorization", "token OAUTH-TOKEN").
+		expect().statusCode(expectedStatusCode).log().everything().
+		get("/users/jagadeshbmunta/orgs?access_token="+accessToken);
+			
+	}
 	
 	@AfterClass
 	public void unsetup() {
@@ -88,8 +110,16 @@ public class GitHubRATest {
 	@DataProvider
 	public Object[][] testData() {
 		return new Object[][] {
-				{"jagadeshbmunta","dGVzdDEyMyE=", 200,"https://api.github.com/orgs/EverydayOn"},
-				{"test","dGVzdDEyMy=",401,null}
+				{"jagadeshbmunta","dGVzdDEyMyE=", 200,"https://api.github.com/orgs/EverydayOn"}
+				//{"test","dGVzdDEyMy=",401,null}
+		};
+	}
+	
+	@DataProvider
+	public Object[][] testData2() {
+		return new Object[][] {
+				{"097fe1452056c2be5f88b478ec379501eae3c605",200},
+				{"097fe1452056c2be5f88b478ec379501eae3c606",401}
 		};
 	}
 	
