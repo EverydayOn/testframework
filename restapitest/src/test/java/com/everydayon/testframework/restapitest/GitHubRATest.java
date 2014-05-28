@@ -38,7 +38,7 @@ public class GitHubRATest {
 	@Test(dataProvider="testData")
 	public void basicLoginTest1(String userName, String password, int expStatusCode, String expData) {
 		logger.info("Running basic auth with user "+userName);
-		//System.out.println(userName);
+		//logger.info(userName);
 		given().
 			log().everything().
 			headers("Accept", "application/vnd.github.v3+json").
@@ -74,9 +74,9 @@ public class GitHubRATest {
 			get("/users/jagadeshbmunta/orgs");
 		
 		String json = res.asString();
-		System.out.println(">>>>>>>>>>>>>Json="+json);
+		logger.info(">>>>>>>>>>>>>Json="+json);
 		JsonPath j = new JsonPath(json);
-		System.out.println(">>>>>>>>>>>>>[0].url="+j.get("[0].url"));
+		logger.info(">>>>>>>>>>>>>[0].url="+j.get("[0].url"));
 		assertEquals(j.get("[0].url"),expData);
 	}
 
