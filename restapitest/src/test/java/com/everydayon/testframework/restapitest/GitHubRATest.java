@@ -1,13 +1,13 @@
 package com.everydayon.testframework.restapitest;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.log4testng.Logger;
 
-import sun.util.logging.resources.logging;
 import static org.testng.Assert.*;
 
 import com.jayway.restassured.RestAssured;
@@ -20,13 +20,14 @@ import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
 import static org.hamcrest.Matchers.*;
 
 /**
- * A simple github test using RestAssured test framework
+ * A simple github REST API test using RestAssured test framework
  * 
  * @author Jagadesh Babu Munta
  *
  */
 public class GitHubRATest {
-	Logger logger = Logger.getLogger(GitHubRATest.class);
+	Logger logger = LoggerFactory.getLogger(GitHubRATest.class);
+	
 	@BeforeClass
 	public void setup() {
 		RestAssured.baseURI = System.getProperty("api.host","https://api.github.com");
@@ -36,7 +37,7 @@ public class GitHubRATest {
 	
 	@Test(dataProvider="testData")
 	public void basicLoginTest1(String userName, String password, int expStatusCode, String expData) {
-		
+		logger.info("Running basic auth with user "+userName);
 		//System.out.println(userName);
 		given().
 			log().everything().
